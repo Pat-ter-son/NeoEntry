@@ -216,14 +216,57 @@
 
 <body class="bg-gradient-to-br from-blue-50 to-blue-200 min-h-screen font-sans text-blue-900">
 
-    <header class="py-10 text-center">
-        <img src="{{ asset('Images/neo.png') }}" alt="Logo" class="mx-auto w-24 h-24 animate-spin-slow drop-shadow-lg" />
-        <h1 class="mt-4 text-4xl font-extrabold tracking-wide">Gestion des Agents</h1>
-        <p class="mt-2 text-blue-700 max-w-xl mx-auto">Ajoutez, modifiez ou consultez les informations de vos agents</p>
+    <header class="bg-white/70 backdrop-blur-lg shadow-lg py-4 px-8 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="{{ asset('Images/neo.png') }}" alt="Logo Bleu & Blanc"
+                    class="h-12 w-12 rounded-full animate-spin-slow drop-shadow-md" />
+                <h1 class="text-2xl font-bold text-blue-800 hidden sm:block">Neo Start Technology <span
+                        class="text-blue-500">Admin</span></h1>
+            </div>
+
+            <nav class="hidden md:flex space-x-8">
+                <a href="{{ route('vueAjoutAgent') }}"
+                    class="text-blue-700 hover:text-blue-900 font-medium text-lg transition duration-300 relative group">
+                    👤Agents
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+
+                <a href="{{ route('vueAjoutAgentLoca') }}"
+                    class="text-gray-600 hover:text-blue-900 font-medium text-lg transition duration-300 relative group">
+                    👤Locataires
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+
+                <a href="{{ route('vueAjoutLoca') }}"
+                    class="text-gray-600 hover:text-blue-900 font-medium text-lg transition duration-300 relative group">
+                    👤Agents&Locataires
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+
+                <a href="{{ route('vueAjoutLoca') }}"
+                    class="text-gray-600 hover:text-blue-900 font-medium text-lg transition duration-300 relative group">
+                    👤Admin
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                </a>
+            </nav>
+
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-blue-700 hover:text-blue-900 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden mt-4 hidden">
+            <nav class="flex flex-col space-y-3 px-4 py-2 bg-white rounded-lg shadow-md">
+                <a href="#" class="block text-blue-700 hover:text-blue-900 font-medium py-2">Agents</a>
+                <a href="#" class="block text-gray-600 hover:text-blue-900 font-medium py-2">Locataires</a>
+                <a href="#" class="block text-gray-600 hover:text-blue-900 font-medium py-2">Agents&Locataires</a>
+            </nav>
+        </div>
     </header>
-
-    <main class="max-w-7xl mx-auto px-4 md:px-8 mb-20">
-
+    <main class="max-w-7xl mx-auto px-4 md:px-8 mb-20 mt-8">
         <section class="glass-card p-10 mb-14">
             <h2 class="text-2xl font-semibold border-l-4 border-blue-600 pl-4 mb-6 text-blue-800">Ajout d'un nouvel agent
             </h2>
@@ -284,7 +327,7 @@
                         <option value="">Sélectionner le sexe</option>
                         <option value="M">Masculin</option>
                         <option value="F">Féminin</option>
-                        <option value="Autre">Autre</option>
+
                     </select>
                 </div>
                 <div>
@@ -349,9 +392,8 @@
                     @if (session('success'))
                     <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-4">
                         {{ session('success') }}
-
-                        @endif
                     </div>
+                    @endif
                 </div>
 
                 <div class="search-container mx-auto mb-6 glass-card p-1 rounded-md shadow-md">
@@ -393,18 +435,31 @@
                                         {{ $agent->statut }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 space-x-2">
-                                    <button onclick="openAgentDetailsModal({{ $agent->id }})"
-                                        class="bg-cyan-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-cyan-700">Voir
-                                        +</button>
+                                <td class="px-4 py-3 space-x-2 flex items-center">
+                                    <button onclick="openAgentDetailsModal('{{$agent->id }}')"
+                                        class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-yellow-600">
+                                        voir ➕
+                                    </button>
+
                                     <button
-                                        class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-blue-700"><a href="">Modifier</a></button>
+                                        class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-blue-700">
+                                        <a href="">✏️Modifier</a>
+                                    </button>
+
+                                    <form action="{{ route('deleteAjoutAgent', $agent->id) }}" method="POST" class="inline-block">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-red-700">
+                                            🗑️ Supprimer
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
+            </div>
         </section>
 
     </main>
@@ -436,7 +491,7 @@
                 <p><strong>Ville :</strong> {{ $agent->ville }}</p>
                 <div class="md:col-span-2">
                     <p class="font-bold mb-2">Copie CNI :</p>
-                    <img src="{{ asset($agent->photo_cni) }}" alt="CNI de {{ $agent->nom }}"
+                    <img src="{{ Storage::url($agent->cni) }}" alt="CNI de {{ $agent->nom }}"
                         class="max-w-full h-auto rounded-lg shadow-md border border-blue-300" />
                 </div>
             </div>
@@ -457,6 +512,7 @@
 
 
     <script>
+        // Scripts JS existants pour les modals et la recherche
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
         }
@@ -473,13 +529,11 @@
             openModal(id);
         }
 
-        // Specific function to open agent details modal
         function openAgentDetailsModal(agentId) {
             const modalId = `agentDetailsModal${agentId}`;
             openModal(modalId);
         }
 
-        // Script pour la barre de recherche
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             const agentRows = document.querySelectorAll('.agent-row');
@@ -497,6 +551,14 @@
                         row.style.display = 'none';
                     }
                 });
+            });
+
+            // Script pour le menu hamburger
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            menuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
             });
         });
     </script>

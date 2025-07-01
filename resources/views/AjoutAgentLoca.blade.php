@@ -246,7 +246,14 @@
                 + Locataire
             </h2>
 
-            <form class="grid md:grid-cols-2 gap-6" method="POST" action="#"
+            @if (session('success'))
+            <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-4">
+                {{ session('success') }}
+            </div>
+            @endif
+
+            <form class="grid md:grid-cols-2 gap-6" method="POST" action="storeAjoutAgentLoca"
+                @csrf
                 enctype="multipart/form-data">
                 <div>
                     <label class="block mb-2 font-semibold text-blue-700" for="nom">Nom</label>
@@ -352,27 +359,40 @@
             <div class="overflow-x-auto bg-white/70 backdrop-blur-xl rounded-2xl shadow-lg p-6">
                 <table class="min-w-full divide-y divide-gray-200 text-left">
                     <thead class="bg-gradient-to-r from-cyan-500 to-blue-700 text-white">
-                        <tr>
-                            <th class="px-4 py-3 font-bold uppercase text-sm rounded-tl-xl">Photo</th>
-                            <th class="px-4 py-3 font-bold uppercase text-sm">Nom</th>
-                            <th class="px-4 py-3 font-bold uppercase text-sm">Prénoms</th>
-                            <th class="px-4 py-3 font-bold uppercase text-sm">Fonction</th>
-                            <th class="px-4 py-3 font-bold uppercase text-sm">Statut Agent</th>
-                            <th class="px-4 py-3 font-bold uppercase text-sm">Statut Locataire</th>
-                            <th class="px-4 py-3 font-bold uppercase text-sm rounded-tr-xl">Actions</th>
-                        </tr>
+                        <tr class="hover:bg-blue-50 agent-locataire-row" data-name="{{ $agentLoca->nom }}"
+                            data-matricule="A001" data-fonction="Agent Commercial">
+                            <td class="px-4 py-3">
+                                <img src="{{ Storage::url($agentLoca->photo) }}" alt="Photo de {{ $agentLoca->nom }}"
+                                    class="w-12 h-12 rounded-full border border-blue-300 shadow cursor-pointer object-cover photo"
+                                    onclick="openPhotoModal('itemPhotoModal', 'https://via.placeholder.com/400', 'Photo de Jean Dupont')">
+                            </td>
+                            <td class="px-4 py-3">{{ $agentLoca->nom }}</td>
+                            <td class="px-4 py-3">{{ $agentLoca->prenoms }}</td>
+                            <td class="px-4 py-3">{{ $agentLoca->fonction }}</td>
+                            <td class="px-4 py-3">
+                                <span
+                                    class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700 font-semibold select-none">
+                                    {{ $agentLoca->statutAgent }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span
+                                    class="inline-block px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-semibold select-none">
+                                    {{ $agentLoca->statutLoca }}
+                                </span>
+                            </td>
                     </thead>
                     <tbody class="divide-y divide-gray-300">
                         <tr class="hover:bg-blue-50 agent-locataire-row" data-name="jean dupont"
                             data-matricule="A001" data-fonction="Agent Commercial">
                             <td class="px-4 py-3">
-                                <img src="https://via.placeholder.com/48" alt="Photo de Jean Dupont"
+                                <img src=" {{ Storage::url($agentLoca->photo) }}" alt="Photo de  {{ $agentLoca->id }}"
                                     class="w-12 h-12 rounded-full border border-blue-300 shadow cursor-pointer object-cover photo"
                                     onclick="openPhotoModal('itemPhotoModal', 'https://via.placeholder.com/400', 'Photo de Jean Dupont')">
                             </td>
-                            <td class="px-4 py-3">Dupont</td>
-                            <td class="px-4 py-3">Jean</td>
-                            <td class="px-4 py-3">Agent Commercial</td>
+                            <td class="px-4 py-3"> {{ $agentLoca->nom}}</td>
+                            <td class="px-4 py-3"> {{ $agentLoca->prenoms }}</td>
+                            <td class="px-4 py-3"> {{ $agentLoca->fonction }}</td>
                             <td class="px-4 py-3">
                                 <span
                                     class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700 font-semibold select-none">
@@ -386,25 +406,19 @@
                                 </span>
                             </td>
                             <td class="px-4 py-3 space-x-2">
-                                <button onclick="openDetailsModal('itemDetailsModal', {
-                                    photo: 'https://via.placeholder.com/96',
-                                    name: 'Jean Dupont',
-                                    role: 'Agent Commercial',
-                                    matricule: 'A001',
-                                    departement: 'Ventes',
-                                    statutAgent: 'Actif',
-                                    statutLocataire: 'N/A',
-                                    numAppartement: 'N/A',
-                                    dateEntree: '2022-01-15',
-                                    montantLoyer: 'N/A',
-                                    adresse: '123 Rue de la Paix, Paris',
-                                    photoCNI: 'https://via.placeholder.com/600x400'
-                                })"
-                                    class="bg-cyan-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-cyan-700">Voir
-                                    +</button>
+                                <button onclick="openAgentDetailsModal('')"
+                                    class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-yellow-600">
+                                    voir ➕
+                                </button>
+
                                 <button
-                                    class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-blue-700"><a
-                                        href="#">Modifier</a></button>
+                                    class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-blue-700"><a href="">✏️Modifier</a>
+                                </button>
+
+                                <button class="bg-red-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-red-700">
+                                    <a href="">🗑️ Supprimer</a>
+                                </button>
+
                             </td>
                         </tr>
                         <tr class="hover:bg-blue-50 agent-locataire-row" data-name="marie curie"
@@ -431,17 +445,17 @@
                             </td>
                             <td class="px-4 py-3 space-x-2">
                                 <button onclick="openDetailsModal('itemDetailsModal', {
-                                    photo: 'https://via.placeholder.com/96',
-                                    name: 'Marie Curie',
-                                    role: 'Locataire',
-                                    matricule: 'N/A',
-                                    departement: 'N/A',
-                                    statutAgent: 'N/A',
-                                    statutLocataire: 'Actif',
-                                    numAppartement: 'B05',
-                                    dateEntree: '2023-03-10',
-                                    montantLoyer: '850€',
-                                    adresse: '5 Avenue des Roses, Nice',
+                                    photo: ' {{ Storage::url($agentLoca->cni) }}',
+                                    name: ' {{ $agentLoca->nom},  {{ $agentLoca->prenoms }}',
+                                    
+                                    matricule: ' {{ $agentLoca->matricule }}',
+                                    departement: ' {{ $agentLoca->departement }}',
+                                    statutAgent: ' {{ $agentLoca->statutAgent }}',
+                                    statutLocataire: ' {{ $agentLoca->statutLoca }}',
+                                    numAppartement: ' {{ $agentLoca->numApp }}',
+                                    dateEntree: ' {{ $agentLoca->dateEntree }}',
+                                    montantLoyer: ' {{ $agentLoca->montantLoyer }}',
+                                    adresse: ' {{ $agentLoca->adresse }}',
                                     photoCNI: 'https://via.placeholder.com/600x400'
                                 })"
                                     class="bg-cyan-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-cyan-700">Voir
@@ -451,6 +465,7 @@
                                         href="#">Modifier</a></button>
                             </td>
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

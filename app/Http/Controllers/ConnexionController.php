@@ -38,4 +38,6 @@ class ConnexionController extends Controller
         // 4. Connexion échouée → retour au formulaire avec erreur
         return redirect()->back()->withErrors(['email' => 'Identifiants incorrects.'])->withInput();
     }
+
+   
 }

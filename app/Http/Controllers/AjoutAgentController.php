@@ -6,7 +6,7 @@ use App\Http\Requests\AjoutAgentRequest;
 use Illuminate\Http\Request;
 use App\Models\AjoutAgent; // Assuming you have a Post model for storing agent data
 use App\Models\AjoutAgentModel;
-use App\Models\Post; // Assuming you have a Post model for storing agent data
+// Assuming you have a Post model for storing agent data
 
 
 
@@ -34,10 +34,10 @@ class AjoutAgentController extends Controller
         }
 
         //  Gérer la photo de la CNI
-        if ($request->hasFile('photo_cni')) {
-            $agent['photo_cni'] = $request->file('photo_cni')->store('photos_cni_agents', 'public');
+        if ($request->hasFile('cni')) {
+            $agent['cni'] = $request->file('cni')->store('cni_agents', 'public');
         } else {
-            $agent['photo_cni'] = 'images/default-cni-blue.png'; // Vérifiez que ce fichier est dans /public/images
+            $agent['cni'] = 'images/default-user-blue.png'; // Vérifiez que ce fichier est dans /public/images
         }
 
         //  Enregistrement de l'agent en base de données
@@ -47,15 +47,13 @@ class AjoutAgentController extends Controller
         return redirect()->route('vueAjoutAgent')->with('success', 'Agent ajouté avec succès !');
     }
 
-   public function edit(AjoutAgentRequest $agent ){
-        return view('edit', [
-            '$AjoutAgentRequest' => $agent
-        ]);
-   }
+    public function delete($id){
+        $agent = AjoutAgentModel::findOrFail($id);
+        $agent->delete();
+        return back();
+    }
 
-   public function update(AjoutAgentRequest $agent){
-    '$AjoutAgentRequest' -> update($request->validated());
-    return redirect()->route('vueAjoutAgent')->with('success', 'Agent ajouté avec succès !');
-    
-   }
+   
+
+  
 }

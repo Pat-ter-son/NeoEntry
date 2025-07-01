@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('matricule')->required();
             $table->date('dateNaissance')->required();
             $table->date('sorti')->nullable();
-            
-            
+
+
             $table->Date('entrer')->required();
             $table->string('montantloy')->required();
             $table->integer('numApp')->required();

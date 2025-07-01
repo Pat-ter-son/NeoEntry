@@ -9,6 +9,8 @@ use App\Http\Controllers\StatistiqueController;
 use App\Http\Controllers\AjoutLocaController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminController;
+use App\Models\AjoutAgentModel;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,15 +35,13 @@ Route::post('/Connexion', [ConnexionController::class, 'login'])->name('login');
 //AGENT
 Route::get('AjoutAgent', [AjoutAgentController::class, 'vue'])->name('vueAjoutAgent');
 Route::post('AjoutAgent', [AjoutAgentController::class, 'storeAgent'])->name('storeAjoutAgent');
-Route::get('/{id}/edit', [AjoutAgentController::class,])->name('edit');
-Route::post('/{id}/edit', [AjoutAgentController::class, 'update']);
+Route::delete('/deleteAjoutAgent/{id}', [AjoutAgentController::class, 'delete'])->name('deleteAjoutAgent');
 
 
-
-
-//Ajout de Location
+//Ajout de Locataire
 Route::get('/AjoutLoca', [AjoutAgentLocaController::class, 'vue'])->name('vueAjoutLoca');
-Route::post('/AjoutLoca', [AjoutAgentLocaController::class, 'storeAgentLoca'])->name('storeLoca');
+Route::post('/AjoutLoca', [AjoutLocaController::class, 'store'])->name('storeAjoutLoca');
+Route::delete('/AjoutLoca/{id}', [AjoutLocaController::class, 'delete'])->name('deleteAjoutLoca');
 
 
 //VISITEURS
@@ -53,10 +53,19 @@ Route::post('/AjoutVisiteur', [AjoutVisiteurController::class, 'storeVisiteur'])
 
 
 
-Route::get('/Statistique', [StatistiqueController::class, 'vue'])->name('vueStatistique');
 
+//Ajout Agent&Locataire
 Route::get('/AjoutAgentLoca', [AjoutLocaController::class, 'vue'])->name('vueAjoutAgentLoca');
+Route::post('/AjoutAgentLoca', [AjoutAgentLocaController::class, 'store'])->name('storeAjoutAgentLoca');
+
 
 Route::get('/Support', [SupportController::class, 'vue'])->name('vueSupport');
 
+//Dashboard
 Route::get('/Dashboard', [DashboardController::class, 'vueDashboard'])->name('vueDashboard');
+
+
+
+//ADMIN
+Route::get('/Admin', [AdminController::class, 'vue'])->name('vueAdmin');
+Route::post('/Admin', [AdminController::class, 'login'])->name('loginAdmin');

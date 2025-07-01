@@ -236,7 +236,7 @@
             </div>
             @endif
 
-            <form class="grid md:grid-cols-2 gap-6" method="POST" action="{{ route('storeAjoutAgentLoca') }}"
+            <form class="grid md:grid-cols-2 gap-6" method="POST" action="{{ route('storeAjoutLoca') }}"
                 enctype="multipart/form-data">
                 @csrf
                 <div>
@@ -282,7 +282,7 @@
                         <option value="">Sélectionner le sexe</option>
                         <option value="M">Masculin</option>
                         <option value="F">Féminin</option>
-                        
+
                     </select>
                 </div>
                 <div>
@@ -378,31 +378,42 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-300">
-                            @foreach ($locataires as $locataire)
-                            <tr class="hover:bg-blue-50 locataire-row" data-locataire-name="{{ strtolower($locataire->nom . ' ' . $locataire->prenoms) }}" data-locataire-function="{{ strtolower($locataire->fonction) }}">
+                            @foreach ($loca as $loc)
+                            <tr class="hover:bg-blue-50 locataire-row" data-locataire-name="{{ strtolower($loc->nom . ' ' . $loc->prenoms) }}" data-locataire-function="{{ strtolower($loc->fonction) }}">
                                 <td class="px-4 py-3">
-                                    <img src="{{ Storage::url($locataire->photo) }}"
-                                        alt="Photo de {{ $locataire->prenoms }} {{ $locataire->nom }}"
+                                    <img src="{{ Storage::url($loc->photo) }}"
+                                        alt="Photo de {{ $loc->prenoms }} {{ $loc->nom }}"
                                         class="w-12 h-12 rounded-full border border-blue-300 shadow cursor-pointer object-cover locataire-photo"
-                                        onclick="openPhotoModal('locatairePhotoModal', '{{ Storage::url($locataire->photo) }}', 'Photo de {{ $locataire->prenoms }} {{ $locataire->nom }}')">
+                                        onclick="openPhotoModal('locatairePhotoModal', '{{ Storage::url($loc->photo) }}', 'Photo de {{ $loc->nom }} {{ $loc->prenoms }}')">
                                 </td>
-                                <td class="px-4 py-3">{{ $locataire->nom }}</td>
-                                <td class="px-4 py-3">{{ $locataire->prenoms }}</td>
-                                <td class="px-4 py-3">{{ $locataire->fonction }}</td>
+                                <td class="px-4 py-3">{{ $loc->nom }}
+                                </td>
+                                <td class="px-4 py-3">{{ $loc->prenoms }}</td>
+                                <td class="px-4 py-3">{{ $loc->fonction }}</td>
                                 <td class="px-4 py-3">
                                     <span
-                                        class="inline-block px-3 py-1 rounded-full {{ $locataire->statut == 'Occupant' ? 'bg-green-100 text-green-700' : ($locataire->statut == 'En préavis' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700') }} font-semibold select-none">
-                                        {{ $locataire->statut }}
+                                        class="inline-block px-3 py-1 rounded-full {{ $loc->statut == 'Occupant' ? 'bg-green-100 text-green-700' : ($loc->statut == 'En préavis' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700') }} font-semibold select-none">
+                                        {{ $loc->statut }}
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 space-x-2">
-                                    <button onclick="openLocataireDetailsModal({{ $locataire->id }})"
-                                        class="bg-cyan-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-cyan-700">Voir
-                                        +</button>
-                                    <a href="#"
-                                        class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-blue-700">Modifier</a>
-                                    <a href="#"
-                                        class="bg-red-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-red-700">Supprimer</a>
+                                    <button onclick="openAgentDetailsModal('{{ $loca->id }}')"
+                                        class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-yellow-600">
+                                        voir ➕
+                                    </button>
+
+                                    <button
+                                        class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-blue-700"><a href="">✏️Modifier</a>
+                                    </button>
+
+                                    <form action="{{ route('deleteAjoutLoca') }}" method="post" class="inline-block">
+                                        @csrf
+                                        @methode('delete')
+                                        <button class="bg-red-600 text-white px-3 py-1 rounded-full text-sm shadow hover:bg-red-700" type="submit">
+                                            🗑️ Supprimer
+                                        </button>
+                                    </form>
+
                                 </td>
                             </tr>
                             @endforeach
@@ -414,35 +425,35 @@
 
     </main>
 
-    @foreach ($locataires as $locataire)
-    <div id="locataireDetailsModal{{ $locataire->id }}"
+    @foreach ($loca as $loc)
+    <div id="locataireDetailsModal{{ $loc->id }}"
         class="fixed inset-0 z-50 hidden modal-overlay flex items-center justify-center px-4 py-10">
         <div
             class="bg-gradient-to-br from-blue-50 to-blue-200 rounded-3xl shadow-2xl max-w-3xl w-full relative p-8 border-4 border-blue-500 glass-card text-blue-900">
-            <button onclick="closeModal('locataireDetailsModal{{ $locataire->id }}')"
+            <button onclick="closeModal('locataireDetailsModal{{ $loc->id }}')"
                 class="absolute top-4 right-4 text-blue-700 hover:text-red-600 text-3xl font-extrabold leading-none">×</button>
             <div class="text-center mb-6">
-                <img src="{{ Storage::url($locataire->photo) }}" alt="{{ $locataire->nom }} {{ $locataire->prenoms }}"
+                <img src="{{ Storage::url($loc->photo) }}" alt="{{ $loc->nom }} {{ $loc->prenoms }}"
                     class="w-28 h-28 rounded-full mx-auto border-4 border-blue-600 shadow-lg object-cover" />
-                <h3 class="text-4xl font-extrabold mt-4">{{ $locataire->nom }} {{ $locataire->prenoms }}</h3>
-                <p class="text-blue-700 italic">{{ $locataire->fonction }}</p>
+                <h3 class="text-4xl font-extrabold mt-4">{{ $loc->nom }} {{ $loc->prenoms }}</h3>
+                <p class="text-blue-700 italic">{{ $loc->fonction }}</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-blue-900 text-sm font-medium">
-                <p><strong>Matricule :</strong> {{ $locataire->matricule }}</p>
-                <p><strong>Département :</strong> {{ $locataire->departement }}</p>
-                <p><strong>Statut :</strong> {{ $locataire->statut }}</p>
-                <p><strong>N° Appartement :</strong> {{ $locataire->numApp }}</p>
-                <p><strong>Sexe :</strong> {{ $locataire->sexe }}</p>
-                <p><strong>Date de naissance :</strong> {{ $locataire->dateNaissance }}</p>
-                <p><strong>Date d'entrée :</strong> {{ $locataire->dateEntree }}</p>
-                <p><strong>Date de sortie :</strong> {{ $locataire->dateSortie }}</p>
-                <p><strong>Email :</strong> {{ $locataire->email }}</p>
-                <p><strong>Téléphone :</strong> {{ $locataire->phone }}</p>
-                <p><strong>Adresse :</strong> {{ $locataire->adresse }}</p>
-                <p><strong>Ville :</strong> {{ $locataire->ville }}</p>
+                <p><strong>Matricule :</strong> {{ $loc->matricule }}</p>
+                <p><strong>Département :</strong> {{ $loc->departement }}</p>
+                <p><strong>Statut :</strong> {{ $loc->statut }}</p>
+                <p><strong>N° Appartement :</strong> {{ $loc->numApp }}</p>
+                <p><strong>Sexe :</strong> {{ $loc->sexe }}</p>
+                <p><strong>Date de naissance :</strong> {{ $loc->dateNaissance }}</p>
+                <p><strong>Date d'entrée :</strong> {{ $loc->dateEntree }}</p>
+                <p><strong>Date de sortie :</strong> {{ $loc->dateSortie }}</p>
+                <p><strong>Email :</strong> {{ $loc->email }}</p>
+                <p><strong>Téléphone :</strong> {{ $loc->phone }}</p>
+                <p><strong>Adresse :</strong> {{ $loc->adresse }}</p>
+                <p><strong>Ville :</strong> {{ $loc->ville }}</p>
                 <div class="md:col-span-2">
                     <p class="font-bold mb-2">Copie CNI :</p>
-                    <img src="{{ Storage::url($locataire->photo_cni) }}" alt="CNI de {{ $locataire->nom }}"
+                    <img src="{{ Storage::url($loc->cni) }}" alt="CNI de {{ $loc->nom }}"
                         class="max-w-full h-auto rounded-lg shadow-md border border-blue-300" />
                 </div>
             </div>

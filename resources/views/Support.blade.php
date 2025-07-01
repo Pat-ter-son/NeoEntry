@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -151,34 +150,30 @@
                     <span class="{{ request()->routeIs('vueSupport') ? 'underline decoration-pink-300 decoration-4 underline-offset-4' : '' }}">Accueil</span>
                 </a>
             </li>
-            <li>
-                <a href="{{ route('vueAjoutAgent') }}"
-                    class="block py-2 px-4 rounded-md hover:bg-white/20 transition duration-200 {{ request()->routeIs('vueAjoutAgent') ? 'bg-white/30' : '' }}">
-                    <span class="{{ request()->routeIs('vueAjoutAgent') ? 'underline decoration-pink-300 decoration-4 underline-offset-4' : '' }}">Ajout Agent</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('vueAjoutLoca') }}"
-                    class="block py-2 px-4 rounded-md hover:bg-white/20 transition duration-200 {{ request()->routeIs('vueAjoutLoca') ? 'bg-white/30' : '' }}">
-                    <span class="{{ request()->routeIs('vueAjoutLoca') ? 'underline decoration-pink-300 decoration-4 underline-offset-4' : '' }}">Ajout Locataire</span>
-                </a>
-            </li>
+            
+            
             <li>
                 <a href="{{ route('vueAjoutVisiteur') }}"
                     class="block py-2 px-4 rounded-md hover:bg-white/20 transition duration-200 {{ request()->routeIs('vueAjoutVisiteur') ? 'bg-white/30' : '' }}">
                     <span class="{{ request()->routeIs('vueAjoutVisiteur') ? 'underline decoration-pink-300 decoration-4 underline-offset-4' : '' }}">Ajout Visiteur</span>
                 </a>
             </li>
-            <li>
-                <a href="{{ route('vueAjoutAgentLoca') }}"
-                    class="block py-2 px-4 rounded-md hover:bg-white/20 transition duration-200 {{ request()->routeIs('vueAjoutAgentLoca') ? 'bg-white/30' : '' }}">
-                    <span class="{{ request()->routeIs('vueAjoutAgentLoca') ? 'underline decoration-pink-300 decoration-4 underline-offset-4' : '' }}">Agent & Locataire</span>
-                </a>
-            </li>
+            
             <li>
                 <a href="{{ route('vueDashboard') }}"
                     class="block py-2 px-4 rounded-md hover:bg-white/20 transition duration-200 {{ request()->routeIs('vueDashboard') ? 'bg-white/30' : '' }}">
                     <span class="{{ request()->routeIs('vueDashboard') ? 'underline decoration-pink-300 decoration-4 underline-offset-4' : '' }}">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('vueAdmin') }}"
+                    class="block py-2 px-4 rounded-md bg-gradient-to-r from-blue-500 to-pink-500 text-white font-bold shadow hover:from-blue-600 hover:to-pink-600 transition duration-200 mt-4 text-center">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H3m0 0l4-4m-4 4l4 4m13-4a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                            Connexion
+                    </span>
                 </a>
             </li>
         </ul>
